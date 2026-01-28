@@ -78,8 +78,8 @@
                     <p class="text-secondary mb-2">Success Rate</p>
                     <div class="progress" style="height: 30px; background: rgba(255,255,255,0.1);">
                         {% set success_rate = (result.contents_qa_passed / result.contents_generated * 100)|int %}
-                        <div class="progress-bar" role="progressbar"
-                            style="width: {{ success_rate }}%; background: linear-gradient(135deg, #10b981, #059669);">
+                        <div class="progress-bar" role="progressbar" data-width="{{ success_rate }}"
+                            style="background: linear-gradient(135deg, #10b981, #059669);">
                             {{ success_rate }}%
                         </div>
                     </div>
@@ -162,16 +162,24 @@
 </div>
 
 <script>
+    // Set progress bar width from data attribute
+    document.addEventListener('DOMContentLoaded', function () {
+        var progressBar = document.querySelector('.progress-bar[data-width]');
+        if (progressBar) {
+            progressBar.style.width = progressBar.getAttribute('data-width') + '%';
+        }
+    });
+
     function downloadReport() {
-        const report = {{ result| tojson
-    }};
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(report, null, 2));
-    const downloadAnchorNode = document.createElement('a');
-    downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", "batch_" + report.batch_id + "_report.json");
-    document.body.appendChild(downloadAnchorNode);
-    downloadAnchorNode.click();
-    downloadAnchorNode.remove();
+        var reportData = '{{ result|tojson|safe }}';
+        var report = JSON.parse(reportData);
+        var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(report, null, 2));
+        var downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", "batch_" + report.batch_id + "_report.json");
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
     }
 </script>
 {% endblock %}
