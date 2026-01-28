@@ -1,0 +1,15 @@
+# Genjed.ai - Render Deployment Configuration
+
+services:
+  - type: web
+    name: genjed
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: cd genjed/web && gunicorn app:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11"
+      - key: REPLICATE_API_KEY
+        sync: false
+      - key: FLASK_SECRET_KEY
+        generateValue: true
