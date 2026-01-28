@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Genjed.ai{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1 class="hero-title">
+        <span
+            style="background: linear-gradient(135deg, #6366f1, #8b5cf6); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+            AI-Powered Content Creation
+        </span>
+    </h1>
+    <p class="hero-subtitle">
+        Generate professional video content for Instagram Reels, TikTok, YouTube Shorts, and more using cutting-edge AI
+        models.
+    </p>
+    <a href="/create-campaign" class="btn btn-primary btn-lg">
+        <i class="bi bi-plus-circle me-2"></i>Create New Campaign
+    </a>
+</div>
+
+<!-- Stats Section -->
+<div class="row g-4 mb-5">
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="stat-value">{{ results|length }}</div>
+            <div class="stat-label">Total Campaigns</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="stat-value">{{ results|sum(attribute='contents_generated') if results else 0 }}</div>
+            <div class="stat-label">Videos Generated</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="stat-value">{{ results|sum(attribute='contents_qa_passed') if results else 0 }}</div>
+            <div class="stat-label">QA Passed</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="stat-value">{{ results|sum(attribute='contents_distributed') if results else 0 }}</div>
+            <div class="stat-label">Distributed</div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<h2 class="mb-4">
+    <i class="bi bi-lightning-charge me-2"></i>Platform Features
+</h2>
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="card p-4">
+            <div class="feature-icon">
+                <i class="bi bi-camera-video"></i>
+            </div>
+            <h5>AI Video Generation</h5>
+            <p class="text-secondary mb-0">Generate professional videos using Runway Gen-3, Kling AI, and Stable Video
+                Diffusion.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-4">
+            <div class="feature-icon">
+                <i class="bi bi-mic"></i>
+            </div>
+            <h5>Text-to-Speech</h5>
+            <p class="text-secondary mb-0">Create multilingual voiceovers with XTTS-v2 supporting 20+ languages.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-4">
+            <div class="feature-icon">
+                <i class="bi bi-check-circle"></i>
+            </div>
+            <h5>Quality Assurance</h5>
+            <p class="text-secondary mb-0">Automated QA checks for brand compliance, technical specs, and content
+                accuracy.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-4">
+            <div class="feature-icon">
+                <i class="bi bi-share"></i>
+            </div>
+            <h5>Multi-Channel Distribution</h5>
+            <p class="text-secondary mb-0">Publish to Instagram Reels, TikTok, YouTube Shorts, CTV, and DOOH.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-4">
+            <div class="feature-icon">
+                <i class="bi bi-graph-up"></i>
+            </div>
+            <h5>Performance Analytics</h5>
+            <p class="text-secondary mb-0">Track views, engagement, conversions, and ROI across all channels.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-4">
+            <div class="feature-icon">
+                <i class="bi bi-palette"></i>
+            </div>
+            <h5>Brand Customization</h5>
+            <p class="text-secondary mb-0">Apply your brand colors, fonts, and tone of voice to all content.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Campaigns -->
+<h2 class="mb-4">
+    <i class="bi bi-clock-history me-2"></i>Recent Campaigns
+</h2>
+{% if results %}
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Batch ID</th>
+                    <th>Campaign</th>
+                    <th>Status</th>
+                    <th>Generated</th>
+                    <th>QA Passed</th>
+                    <th>Distributed</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results|reverse %}
+                <tr>
+                    <td><code>{{ result.batch_id[:8] }}...</code></td>
+                    <td>{{ result.campaign_id if result.campaign_id else 'N/A' }}</td>
+                    <td>
+                        {% if result.success %}
+                        <span class="badge badge-success">Success</span>
+                        {% else %}
+                        <span class="badge badge-danger">Failed</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ result.contents_generated }}</td>
+                    <td>{{ result.contents_qa_passed }}</td>
+                    <td>{{ result.contents_distributed }}</td>
+                    <td>{{ result.created_at[:10] if result.created_at else 'N/A' }}</td>
+                    <td>
+                        <a href="/batch/{{ result.batch_id }}" class="btn btn-sm btn-outline-light">
+                            <i class="bi bi-eye"></i> View
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="card p-5 text-center">
+    <i class="bi bi-inbox display-1 text-secondary mb-3"></i>
+    <h4>No campaigns yet</h4>
+    <p class="text-secondary mb-4">Create your first AI-powered content campaign to get started.</p>
+    <a href="/create-campaign" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-2"></i>Create Campaign
+    </a>
+</div>
+{% endif %}
+{% endblock %}

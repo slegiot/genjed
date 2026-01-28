@@ -1,0 +1,20 @@
+# Genjed.ai Requirements
+
+# Core dependencies
+pyyaml>=6.0
+
+# Replicate SDK
+replicate>=0.20.0
+
+# Async support
+asyncio
+
+# Web Framework
+flask>=2.3.0
+
+# Development dependencies
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.0.0

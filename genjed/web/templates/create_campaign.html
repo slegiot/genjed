@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+
+{% block title %}Create Campaign - Genjed.ai{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="d-flex align-items-center mb-4">
+            <a href="/" class="btn btn-outline-light btn-sm me-3">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+            <h1 class="mb-0">
+                <i class="bi bi-plus-circle me-2"></i>Create New Campaign
+            </h1>
+        </div>
+
+        {% if error %}
+        <div class="alert alert-danger mb-4">
+            <i class="bi bi-exclamation-triangle me-2"></i>{{ error }}
+        </div>
+        {% endif %}
+
+        <form method="POST" action="/create-campaign">
+            <!-- Campaign Info -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Campaign Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Customer ID</label>
+                            <input type="text" class="form-control" name="customer_id" value="customer_001" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Campaign ID</label>
+                            <input type="text" class="form-control" name="campaign_id"
+                                placeholder="Auto-generated if empty">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-box me-2"></i>Product Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Product Name</label>
+                            <input type="text" class="form-control" name="product_name"
+                                value="Premium Wireless Headphones" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Price ($)</label>
+                            <input type="number" class="form-control" name="product_price" value="299.99" step="0.01"
+                                required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Category</label>
+                            <select class="form-select" name="product_category">
+                                <option value="electronics">Electronics</option>
+                                <option value="fashion">Fashion</option>
+                                <option value="home_garden">Home & Garden</option>
+                                <option value="beauty">Beauty</option>
+                                <option value="food_beverage">Food & Beverage</option>
+                                <option value="sports">Sports</option>
+                                <option value="toys">Toys</option>
+                                <option value="automotive">Automotive</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Product Image URL</label>
+                            <input type="url" class="form-control" name="product_image_url"
+                                value="https://example.com/headphones.jpg" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Product Description</label>
+                        <textarea class="form-control" name="product_description" rows="3"
+                            required>High-quality wireless headphones with active noise cancellation and 30-hour battery life.</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Brand Guidelines -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-palette me-2"></i>Brand Guidelines</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Brand Name</label>
+                            <input type="text" class="form-control" name="brand_name" value="AudioTech" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Brand Colors (comma-separated)</label>
+                            <input type="text" class="form-control" name="brand_colors" value="#1a1a2e,#16213e,#0f3460"
+                                required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tone of Voice</label>
+                        <input type="text" class="form-control" name="brand_tone" value="Professional and innovative"
+                            required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Template Configuration -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-file-earmark-text me-2"></i>Template Configuration</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Template Name</label>
+                            <input type="text" class="form-control" name="template_name" value="Social Media Product Ad"
+                                required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Headline Template</label>
+                            <input type="text" class="form-control" name="headline_template"
+                                value="Experience {{product_name}}" required>
+                            <small class="text-secondary">Use {{product_name}} and {{price}} as placeholders</small>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Call-to-Action Text</label>
+                            <input type="text" class="form-control" name="cta_text" value="Shop Now!" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check mt-4">
+                                <input class="form-check-input" type="checkbox" name="voiceover_enabled"
+                                    id="voiceover_enabled">
+                                <label class="form-check-label" for="voiceover_enabled">
+                                    Enable Voiceover (TTS)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Generation Settings -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-gear me-2"></i>Generation Settings</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Target Channels</label>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="target_channels"
+                                        value="instagram_reels" id="channel_ig" checked>
+                                    <label class="form-check-label" for="channel_ig">
+                                        <i class="bi bi-instagram me-1"></i>Instagram Reels
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="target_channels"
+                                        value="tiktok" id="channel_tiktok" checked>
+                                    <label class="form-check-label" for="channel_tiktok">
+                                        <i class="bi bi-music-note-beamed me-1"></i>TikTok
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="target_channels"
+                                        value="youtube_shorts" id="channel_yt">
+                                    <label class="form-check-label" for="channel_yt">
+                                        <i class="bi bi-youtube me-1"></i>YouTube Shorts
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="target_channels" value="ctv"
+                                        id="channel_ctv">
+                                    <label class="form-check-label" for="channel_ctv">
+                                        <i class="bi bi-tv me-1"></i>CTV
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="target_channels" value="dooh"
+                                        id="channel_dooh">
+                                    <label class="form-check-label" for="channel_dooh">
+                                        <i class="bi bi-display me-1"></i>DOOH
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Aspect Ratios</label>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="aspect_ratios" value="9:16"
+                                        id="ratio_916" checked>
+                                    <label class="form-check-label" for="ratio_916">9:16 (Vertical)</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="aspect_ratios" value="16:9"
+                                        id="ratio_169">
+                                    <label class="form-check-label" for="ratio_169">16:9 (Horizontal)</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="aspect_ratios" value="1:1"
+                                        id="ratio_11">
+                                    <label class="form-check-label" for="ratio_11">1:1 (Square)</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Video Durations (seconds)</label>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="durations" value="15"
+                                        id="dur_15" checked>
+                                    <label class="form-check-label" for="dur_15">15s</label>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="durations" value="30"
+                                        id="dur_30" checked>
+                                    <label class="form-check-label" for="dur_30">30s</label>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="durations" value="60"
+                                        id="dur_60">
+                                    <label class="form-check-label" for="dur_60">60s</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="/" class="btn btn-outline-light btn-lg">Cancel</a>
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="bi bi-play-circle me-2"></i>Generate Content
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

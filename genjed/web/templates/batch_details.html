@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}Batch Details - Genjed.ai{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="/" class="btn btn-outline-light btn-sm me-3">
+        <i class="bi bi-arrow-left"></i> Back
+    </a>
+    <h1 class="mb-0">
+        <i class="bi bi-file-earmark-text me-2"></i>Batch Details
+    </h1>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Batch Info Card -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Batch Information</h5>
+                {% if result.success %}
+                <span class="badge badge-success"><i class="bi bi-check-circle me-1"></i>Success</span>
+                {% else %}
+                <span class="badge badge-danger"><i class="bi bi-x-circle me-1"></i>Failed</span>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong class="text-secondary">Batch ID:</strong></p>
+                        <code class="bg-dark p-2 rounded d-block">{{ result.batch_id }}</code>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong class="text-secondary">Campaign ID:</strong></p>
+                        <p>{{ result.campaign_id if result.campaign_id else 'N/A' }}</p>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong class="text-secondary">Created At:</strong></p>
+                        <p>{{ result.created_at if result.created_at else 'N/A' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-graph-up me-2"></i>Generation Results</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-4">
+                        <div class="p-3">
+                            <div class="display-4 fw-bold" style="color: #6366f1;">{{ result.contents_generated }}</div>
+                            <p class="text-secondary mb-0">Videos Generated</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3">
+                            <div class="display-4 fw-bold" style="color: #10b981;">{{ result.contents_qa_passed }}</div>
+                            <p class="text-secondary mb-0">QA Passed</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3">
+                            <div class="display-4 fw-bold" style="color: #8b5cf6;">{{ result.contents_distributed }}
+                            </div>
+                            <p class="text-secondary mb-0">Distributed</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                {% if result.contents_generated > 0 %}
+                <div class="mt-4">
+                    <p class="text-secondary mb-2">Success Rate</p>
+                    <div class="progress" style="height: 30px; background: rgba(255,255,255,0.1);">
+                        {% set success_rate = (result.contents_qa_passed / result.contents_generated * 100)|int %}
+                        <div class="progress-bar" role="progressbar"
+                            style="width: {{ success_rate }}%; background: linear-gradient(135deg, #10b981, #059669);">
+                            {{ success_rate }}%
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Errors -->
+        {% if result.errors %}
+        <div class="card mb-4 border-danger">
+            <div class="card-header bg-danger bg-opacity-25">
+                <h5 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Errors</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0">
+                    {% for error in result.errors %}
+                    <li class="text-danger"><i class="bi bi-x-circle me-2"></i>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Actions Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-lightning me-2"></i>Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="/create-campaign" class="btn btn-primary">
+                        <i class="bi bi-plus-circle me-2"></i>Create New Campaign
+                    </a>
+                    <button class="btn btn-outline-light" onclick="downloadReport()">
+                        <i class="bi bi-download me-2"></i>Download Report
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Info Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-code-slash me-2"></i>API Endpoint</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-secondary mb-2">Fetch this batch via API:</p>
+                <code class="bg-dark p-2 rounded d-block small">
+                    GET /api/batch/{{ result.batch_id }}
+                </code>
+            </div>
+        </div>
+
+        <!-- Next Steps -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-list-check me-2"></i>Next Steps</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>Content generated
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>QA checks completed
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>Content distributed
+                    </li>
+                    <li class="text-secondary">
+                        <i class="bi bi-circle me-2"></i>Monitor performance analytics
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function downloadReport() {
+        const report = {{ result| tojson
+    }};
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(report, null, 2));
+    const downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", "batch_" + report.batch_id + "_report.json");
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+    }
+</script>
+{% endblock %}

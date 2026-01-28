@@ -1,0 +1,145 @@
+# Genjed.ai Configuration
+# Content Creation Workflow Engine
+
+app:
+  name: "Genjed.ai Content Engine"
+  version: "1.0.0"
+  environment: "development"  # development | staging | production
+  log_level: "DEBUG"  # DEBUG | INFO | WARNING | ERROR
+
+# Replicate API Configuration
+replicate:
+  api_key: "${REPLICATE_API_KEY}"
+  api_base_url: "https://api.replicate.com/v1"
+  max_retries: 3
+  retry_delay: 2  # seconds
+  timeout: 300  # seconds
+  
+  # Model configurations
+  models:
+    video_generation:
+      model_id: "runwayml/gen-3-lite:b09e6e42b92a6dfe3f134e37341f93eafdd62e76"
+      default_duration: 15
+      max_duration: 60
+    image_to_video:
+      model_id: "stability-ai/stable-video-diffusion"
+    tts:
+      model_id: "coqui/xtts-v2:ff8b6f76baf30e0e0f51fd5d9d5b6bcbe63f4eca80fa97b4e68b0e4d7f0d3e5f"
+    image_upscaling:
+      model_id: "stability-ai/real-esrgan"
+    background_removal:
+      model_id: "zsxkzsx/transparent-background"
+
+# Database Configuration
+database:
+  type: "postgresql"  # postgresql | mongodb | sqlite
+  host: "${DB_HOST}"
+  port: 5432
+  name: "${DB_NAME}"
+  user: "${DB_USER}"
+  password: "${DB_PASSWORD}"
+  pool_size: 10
+  max_overflow: 20
+
+# Redis Configuration (for job queue and caching)
+redis:
+  host: "${REDIS_HOST}"
+  port: 6379
+  db: 0
+  key_prefix: "genjed:"
+  job_queue: "genjed:jobs"
+  cache_ttl: 3600  # seconds
+
+# Quality Assurance Configuration
+qa:
+  auto_approve_threshold: 95
+  human_review_threshold: 80
+  checks:
+    brand_compliance:
+      color_match_threshold: 0.85
+      logo_visibility_required: true
+      font_consistency_required: true
+    technical:
+      min_resolution: "1080p"
+      valid_codecs: ["h264", "h265"]
+      duration_tolerance: 1  # seconds
+    content:
+      typo_check: true
+      product_info_check: true
+      cta_visibility_check: true
+
+# Distribution Channels Configuration
+distribution:
+  channels:
+    instagram_reels:
+      enabled: true
+      max_duration: 90
+      aspect_ratio: "9:16"
+      min_resolution: "1080x1920"
+    tiktok:
+      enabled: true
+      max_duration: 60
+      aspect_ratio: "9:16"
+      min_resolution: "1080x1920"
+    youtube_shorts:
+      enabled: true
+      max_duration: 60
+      aspect_ratio: "9:16"
+      min_resolution: "1080x1920"
+    ctv:
+      enabled: true
+      aspect_ratio: "16:9"
+      min_resolution: "4k"
+    dooh:
+      enabled: true
+      aspect_ratio: "16:9|1:1"
+      brightness: "high"
+    ecommerce:
+      enabled: true
+      platforms: ["shopify", "woocommerce"]
+
+# Analytics Configuration
+analytics:
+  collection_interval: 3600  # seconds
+  report_generation_delay: 7  # days
+  roi_target: 3.0  # target ROAS
+  alerts:
+    generation_success_rate_threshold: 0.90
+    qa_queue_size_threshold: 100
+    distribution_failure_rate_threshold: 0.05
+    avg_roas_threshold: 2.0
+
+# File Storage Configuration
+storage:
+  type: "s3"  # s3 | gcs | local
+  base_path: "./generated_content"
+  cdn_url: "${CDN_URL}"
+  s3:
+    bucket: "${S3_BUCKET}"
+    region: "us-east-1"
+    access_key: "${AWS_ACCESS_KEY}"
+    secret_key: "${AWS_SECRET_KEY}"
+
+# Audio Configuration
+audio:
+  volume_levels:
+    music: 0.6
+    voiceover: 0.9
+    sfx: 0.4
+  formats:
+    - "mp3"
+    - "wav"
+  sample_rate: 44100
+
+# Video Configuration
+video:
+  default_codec: "h264"
+  default_frame_rate: 30
+  valid_aspect_ratios:
+    - "9:16"
+    - "16:9"
+    - "1:1"
+  valid_resolutions:
+    - "1080p"
+    - "2k"
+    - "4k"
