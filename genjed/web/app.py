@@ -10,17 +10,14 @@ import json
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from datetime import datetime
 
-# Add parent directory to path for imports
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-# Import models
-from models.product import Product, ProductCategory, BrandGuidelines, AssetBundle
-from models.template import Template, TemplateType, VisualConfig, AudioConfig, TextOverlay
-from models.batch import GenerationConfig, SchedulingMode
-from core.workflow_orchestrator import WorkflowOrchestrator
+# Import models (using package-relative imports)
+from genjed.models.product import Product, ProductCategory, BrandGuidelines, AssetBundle
+from genjed.models.template import Template, TemplateType, VisualConfig, AudioConfig, TextOverlay
+from genjed.models.batch import GenerationConfig, SchedulingMode
+from genjed.core.workflow_orchestrator import WorkflowOrchestrator
 
 # Import API routes
-from api.routes import api as api_blueprint
+from genjed.api.routes import api as api_blueprint
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 app.secret_key = os.getenv('FLASK_SECRET_KEY', 'genjed-dev-key-change-in-production')
